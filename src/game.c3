@@ -9,13 +9,18 @@ import std::thread;
 import graphics;
 import input;
 import globals;
+import sprite;
 
 struct Game {
   graphics::Graphics gfx;
+  sprite::Sprite player;
 }
 
 fn Game init() {
-  return {graphics::init()};
+  Game g = {};
+  g.gfx = graphics::init();
+  g.player = sprite::init(&g.gfx, "content/sprites/MyChar.png", 0, 0, 16, 16, 100, 100);
+  return g;
 }
 
 fn void Game.deinit(&self) {
@@ -24,8 +29,10 @@ fn void Game.deinit(&self) {
 
 fn void Game.game_loop(&self){
   Input inp = input::init();
-  sdl::Surface* img_player = self.gfx.load_image("content/sprites/MyChar.png");
-  sdl::Texture tex_player = sdl::createTextureFromSurface(self.gfx.renderer, img_player);
+  // Sprite s1 = sprite::init(&self.gfx, "content/sprites/MyChar.png", 0, 0, 16, 16, 100, 100);
+
+  // sdl::Surface* img_player = self.gfx.load_image("content/sprites/MyChar.png");
+  // sdl::Texture tex_player = sdl::createTextureFromSurface(self.gfx.renderer, img_player);
 
   sdl::Event event;
   uint last_update_time_ms = sdl::getTicks();
@@ -46,18 +53,19 @@ fn void Game.game_loop(&self){
         if(event.type == sdl::QUIT) break MAINLOOP;
     }
     if (inp.was_key_pressed(sdl::SCANCODE_ESCAPE))  break;
+    if (inp.was_key_pressed(sdl::SCANCODE_LEFT)) {
+      self.player.x-=5;
+    }
+    if (inp.was_key_pressed(sdl::SCANCODE_RIGHT)) {
+      self.player.x +=5;
+    }
 
     uint current_time_ms = sdl::getTicks();
     uint delta_time_ms = current_time_ms - last_update_time_ms; 
     last_update_time_ms = current_time_ms;
 
-    sdl::Rect src_rect = {0, 0, 16, 16};
-    sdl::Rect dst_rect = {10, 10, 32, 32};
-
-    // self.gfx.blitSurface(tex_player, &src_rect, &dst_rect);
-    sdl::setRenderDrawColor(self.gfx.renderer, 0,0,0,255);
     self.gfx.clear();
-    self.gfx.blitSurface(tex_player, &src_rect, &dst_rect);
+    self.player.draw(&self.gfx, (int)self.player.x, (int)self.player.y);
     self.gfx.flip();
 
     self.update(delta_time_ms);
