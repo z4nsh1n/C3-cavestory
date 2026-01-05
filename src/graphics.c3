@@ -1,6 +1,8 @@
 module graphics;
-import sdl;
 import sdlimage;
+import globals;
+
+import sdl;
 import std::collections::map;
 import std::io;
 
@@ -19,7 +21,7 @@ fn Graphics init() {
 
   sdl::Window *window;
   sdl::Renderer *renderer;
-  sdl::createWindowAndRenderer(640, 480, 0, &window, &renderer);
+  sdl::createWindowAndRenderer(globals::SCREEN_WIDTH,globals::SCREEN_HEIGHT, 0, &window, &renderer);
   sdl::setWindowTitle(window, "Hello world");
   return {window, renderer, (ImgMap){}};
 }

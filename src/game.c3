@@ -62,18 +62,20 @@ fn void Game.game_loop(&self){
 
     uint current_time_ms = sdl::getTicks();
     uint delta_time_ms = current_time_ms - last_update_time_ms; 
-    last_update_time_ms = current_time_ms;
-
-    self.gfx.clear();
-    self.player.draw(&self.gfx, (int)self.player.x, (int)self.player.y);
-    self.gfx.flip();
-
     self.update(delta_time_ms);
+    last_update_time_ms = current_time_ms;
+    self.draw(&self.gfx);
+
+
     // thread::sleep_ms((ulong)20-delta_time_ms);
 
   }
 }
-fn void Game.draw(&self){}
+fn void Game.draw(&self, graphics::Graphics* gfx){
+    gfx.clear();
+    self.player.draw(gfx, (int)self.player.x, (int)self.player.y);
+    gfx.flip();
+}
 fn void Game.update(&self, float elapsed_time){
     // io::printfn("elapsed time: %f", elapsed_time);
 

@@ -1,5 +1,6 @@
 module sprite;
 import graphics;
+import globals;
 import sdl;
 
 struct Sprite{
@@ -11,6 +12,7 @@ struct Sprite{
 
 fn Sprite init(graphics::Graphics* gfx, String file, int sourceX, int sourceY, int width, int height, 
     float posX, float posY){
+    
   Sprite s = {};
   s.src_rect.x = sourceX;
   s.src_rect.y = sourceY;
@@ -20,16 +22,15 @@ fn Sprite init(graphics::Graphics* gfx, String file, int sourceX, int sourceY, i
   s.x = posX;
   s.y = posY;
   return s;
+  
+  
 }
 
 // Make Interface!!
 fn void Sprite.update(&self){}
 
 fn void Sprite.draw(&self, graphics::Graphics* gfx, int x, int y, ){
-  sdl::Rect dst_rect = {};
-  dst_rect.x = x;
-  dst_rect.y = y;
-  dst_rect.w = self.src_rect.w * 2;
-  dst_rect.h = self.src_rect.h * 2;
+  sdl::Rect dst_rect = {.x=x, .y=y, .w=self.src_rect.w*globals::SPRITE_SCALE,
+    .h=self.src_rect.h*globals::SPRITE_SCALE};
   gfx.blitSurface(self.spritesheet, &self.src_rect, &dst_rect);
 }
